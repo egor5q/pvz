@@ -137,7 +137,7 @@ def inline(call):
         menu4(id,call.data,x,call.message.message_id)
         
     if call.data=='menu1':
-        menu1(id,call.data,x,call.message.message_id)
+        menu1(id)
         
     if call.data=='menu2':
         menu2(id,call.data,x,call.message.message_id)
