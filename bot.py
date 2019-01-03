@@ -57,7 +57,12 @@ def start(m):
  
 @bot.message_handler(commands=['sendzombie'])
 def sendzombie(m):
-    pass
+    id=m.from_user.id
+    name=m.from_user.first_name
+    username=m.from_user.username
+    chatid=m.chat.id
+    if id==chatid:
+        sendm(id, 'Выберите зомби (одного или нескольких) для атаки случайного вражеского сада.')
 
 def menu1(id,calldata=None,callid=None):
     text='Общая картина сада:\n'
