@@ -59,14 +59,17 @@ def start(m):
 def sendzombie(m):
     pass
 
-def menu1(id):
+def menu1(id,calldata=None,x=None,callid=None):
     kb=types.InlineKeyboardMarkup()
     kb.add(types.InlineKeyboardButton(text='1 линия',callback_data='1 line'))
     kb.add(types.InlineKeyboardButton(text='2 линия',callback_data='2 line'))
     kb.add(types.InlineKeyboardButton(text='3 линия',callback_data='3 line'))
     kb.add(types.InlineKeyboardButton(text='4 линия',callback_data='4 line'))
     kb.add(types.InlineKeyboardButton(text='5 линия',callback_data='5 line'))
-    sendm(id,'Выберите линию для просмотра:',reply_markup=kb)
+    if calldata==None:
+        sendm(id,'Выберите линию для просмотра:',reply_markup=kb)
+    else:
+        medit('Выберите линию для просмотра:',id,callid,reply_markup=kb)
     
     
 def menu2(id,calldata,x,callid):
@@ -137,7 +140,7 @@ def inline(call):
         menu4(id,call.data,x,call.message.message_id)
         
     if call.data=='menu1':
-        menu1(id)
+        menu1(id,call.data,x,call.message.message_id)
         
     if call.data=='menu2':
         menu2(id,call.data,x,call.message.message_id)
