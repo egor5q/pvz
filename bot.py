@@ -67,7 +67,7 @@ def menu1(id,calldata=None,callid=None):
         z=1
         text+=str(i)+' линия:| '
         while z<=x['glenght']:
-            text+=planttoemoji(x['garden-plants'][str(i)+'line'][str(z)+'pos'])+'   '
+            text+=planttoemoji(x['garden-plants'][str(i)+'line'][str(z)+'pos'])+'    '
             z+=1
         text+='\n'
         i+=1
