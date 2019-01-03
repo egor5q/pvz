@@ -90,7 +90,7 @@ def inline(call):
             text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
             kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
             i+=1
-        medit(text,id,call.message.id,reply_markup=kb)
+        medit(text,id,call.message.message_id,reply_markup=kb)
     
     if 'pos' in call.data:
         L=call.data.split(' ')[2]
