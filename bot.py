@@ -59,6 +59,54 @@ def start(m):
 def sendzombie(m):
     pass
 
+def menu1(id):
+    kb=types.InlineKeyboardMarkup()
+    kb.add(types.InlineKeyboardButton(text='1 линия',callback_data='1 line'))
+    kb.add(types.InlineKeyboardButton(text='2 линия',callback_data='2 line'))
+    kb.add(types.InlineKeyboardButton(text='3 линия',callback_data='3 line'))
+    kb.add(types.InlineKeyboardButton(text='4 линия',callback_data='4 line'))
+    kb.add(types.InlineKeyboardButton(text='5 линия',callback_data='5 line'))
+    sendm(id,'Выберите линию для просмотра:',reply_markup=kb)
+    
+    
+def menu2(id,calldata,x):
+    text=''
+    n=calldata.split(' ')[0]
+    i=1
+    while i<=x['glenght']:
+        text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
+        kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
+        i+=1
+    kb.add(types.InlineKeyboardButton(text='Назад',callback_data='menu1'))
+    medit(text,id,call.message.message_id,reply_markup=kb)
+    
+def menu3(id,calldata,x):
+    L=calldata.split(' ')[2]
+    P=calldata.split(' ')[0]
+    text='Выберите растение для установки на '+P+' позицию:'
+    n=0
+    while n<len(allplants):
+        count=x['storage-plants'][allplants[n]]
+        if count>0:
+            kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+allplants[n]+' '+L+' l '+P+' p'))
+        n+=1
+    kb.add(types.InlineKeyboardButton(text='Назад',callback_data='menu2'))
+    medit(text,id,call.message.message_id,reply_markup=kb)
+
+
+def menu4(id,calldata,x):
+    plant=calldata.split(' ')[1]
+    L=calldata.split(' ')[2]
+    P=calldata.split(' ')[4]
+    if x['storage-plants'][plant]>0:
+        cplant=x['garden-plants'][L+'line'][P+'pos']
+        if cplant!=None:
+            users.update_one({'id':id},{'$inc':{'storage-plants.'+cplant:1}})
+        users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
+        users.update_one({'id':id},{'$inc':{'storage-plants.'+plant:-1}})
+        medit(text,id,call.message.message_id,reply_markup=kb)
+        menu3(id,calldata,x)
+    
 @bot.message_handler(commands=['garden'])
 def garden(m):
     id=m.from_user.id
@@ -68,13 +116,7 @@ def garden(m):
     if id==chatid:
         x=users.find_one({'id':id})
         if x!=None:
-            kb=types.InlineKeyboardMarkup()
-            kb.add(types.InlineKeyboardButton(text='1 линия',callback_data='1 line'))
-            kb.add(types.InlineKeyboardButton(text='2 линия',callback_data='2 line'))
-            kb.add(types.InlineKeyboardButton(text='3 линия',callback_data='3 line'))
-            kb.add(types.InlineKeyboardButton(text='4 линия',callback_data='4 line'))
-            kb.add(types.InlineKeyboardButton(text='5 линия',callback_data='5 line'))
-            bot.send_message(id,'Выберите линию для просмотра:',reply_markup=kb)
+            menu1(id)
         
     
 @bot.callback_query_handler(func=lambda call:True)
@@ -83,40 +125,21 @@ def inline(call):
     id=call.from_user.id
     x=users.find_one({'id':id})
     if 'line' in call.data:
-        text=''
-        n=call.data.split(' ')[0]
-        i=1
-        while i<=x['glenght']:
-            text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
-            kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
-            i+=1
-        medit(text,id,call.message.message_id,reply_markup=kb)
+        menu2(id,call.data,x)
     
     if 'pos' in call.data:
-        L=call.data.split(' ')[2]
-        P=call.data.split(' ')[0]
-        text='Выберите растение для установки на '+P+' позицию:'
-        n=0
-        while n<len(allplants):
-            count=x['storage-plants'][allplants[n]]
-            if count>0:
-                kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+allplants[n]+' '+L+' l '+P+' p'))
-            n+=1
-        medit(text,id,call.message.message_id,reply_markup=kb)
+        menu3(id,call.data,x)
         
     if 'set' in call.data:
-        plant=call.data.split(' ')[1]
-        L=call.data.split(' ')[2]
-        P=call.data.split(' ')[4]
-        if x['storage-plants'][plant]>0:
-            cplant=x['garden-plants'][L+'line'][P+'pos']
-            if cplant!=None:
-                users.update_one({'id':id},{'$inc':{'storage-plants.'+cplant:1}})
-            users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
-            users.update_one({'id':id},{'$inc':{'storage-plants.'+plant:-1}})
-            medit(text,id,call.message.message_id,reply_markup=kb)
+        menu4(id,call.data,x)
         
-    
+    if call.data=='menu1':
+        menu1(id,call.data,x)
+        
+    if call.data=='menu2':
+        menu2(id,call.data,x)
+        
+
     
 def planttotext(x):
     return plantnames[x]
