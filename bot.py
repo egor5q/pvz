@@ -95,7 +95,7 @@ def menu3(id,calldata,x,callid):
         if count>0:
             kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+allplants[n]+' '+L+' l '+P+' p'))
         n+=1
-    kb.add(types.InlineKeyboardButton(text='Назад',callback_data='menu2'))
+    kb.add(types.InlineKeyboardButton(text='Назад',callback_data=L+' l menu2'))
     medit(text,id,callid,reply_markup=kb)
 
 
@@ -142,7 +142,7 @@ def inline(call):
     if call.data=='menu1':
         menu1(id,call.data,x,call.message.message_id)
         
-    if call.data=='menu2':
+    if 'menu2' in call.data:
         menu2(id,call.data,x,call.message.message_id)
         
 
