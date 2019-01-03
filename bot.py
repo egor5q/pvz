@@ -115,7 +115,7 @@ def inline(call):
             if cplant!=None:
                 users.update_one({'id':id},{'$inc':{'storage-plants.'+cplant:1}})
             users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
-            users.update_one({'id':id},{'$inc':{'storage-plants.'plant:-1}})
+            users.update_one({'id':id},{'$inc':{'storage-plants.'+plant:-1}})
             sendm(id,'Вы успешно посадили растение на позицию!')
         
     
