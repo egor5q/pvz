@@ -100,7 +100,7 @@ def inline(call):
         while n<len(allplants):
             count=x['storage-plants'][allplants[n]]
             if count>0:
-                kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+ids+' '+L+' l '+P+' p'))
+                kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+allplants[n]+' '+L+' l '+P+' p'))
             n+=1
         sendm(id,text,reply_markup=kb)
         
