@@ -70,6 +70,7 @@ def menu1(id):
     
     
 def menu2(id,calldata,x):
+    kb=types.InlineKeyboardMarkup()
     text=''
     n=calldata.split(' ')[0]
     i=1
@@ -81,6 +82,7 @@ def menu2(id,calldata,x):
     medit(text,id,call.message.message_id,reply_markup=kb)
     
 def menu3(id,calldata,x):
+    kb=types.InlineKeyboardMarkup()
     L=calldata.split(' ')[2]
     P=calldata.split(' ')[0]
     text='Выберите растение для установки на '+P+' позицию:'
@@ -95,6 +97,7 @@ def menu3(id,calldata,x):
 
 
 def menu4(id,calldata,x):
+    kb=types.InlineKeyboardMarkup()
     plant=calldata.split(' ')[1]
     L=calldata.split(' ')[2]
     P=calldata.split(' ')[4]
