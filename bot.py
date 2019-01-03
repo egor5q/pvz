@@ -20,7 +20,10 @@ db=client.pvz
 users=db.users
 
 em_plants={
-    'pea':'🔵'   
+    'pea':'🔵', 
+    'sunflower':'🌻', 
+    'wallnut':'🌰',
+    'mine':'🥔'
 }
 
 allplants=[
@@ -29,6 +32,13 @@ allplants=[
         'wallnut',
         'mine'
 ]
+
+plantnames={
+    'pea':'Горохострел',
+    'sunflower':'Подсолнух',
+    'wallnut':'Стенорех',
+    'mine':'Картофельная мина'
+}
     
 
 
@@ -79,7 +89,7 @@ def inline(call):
         n=call.data.split(' ')[0]
         i=1
         while i<x['glenght']:
-            text+=str(i)+': 'planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
+            text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
             kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
             i+=1
         sendm(id,text,reply_markup=kb)
@@ -110,15 +120,15 @@ def inline(call):
         
     
     
+def planttotext(x):
+    return plantnames[x]
     
         
 def planttoname(x):
     if x==None:
         return 'Пусто'
-    elif x=='0':
-        return ''
     else:
-        return em_plants[x]
+        return em_plants[x]+planttotext(x)
  
 
 def sendm(id,text,parse_mode=None,reply_markup=None):
