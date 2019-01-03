@@ -22,6 +22,13 @@ users=db.users
 em_plants={
     'pea':'🔵'   
 }
+
+allplants=[
+        'pea',
+        'sunflower',
+        'wallnut',
+        'mine'
+]
     
 
 
@@ -77,12 +84,25 @@ def inline(call):
         L=call.data.split(' ')[2]
         P=call.data.split(' ')[0]
         text='Выберите растение для установки на '+P+' позицию:'
-        for ids in x['storage-plants']:
-            kb.add(types.InlineKeyboardButton(text=planttoname(ids),callback_data='set '+ids+' '+L+' l '+P+' p'))
+        n=0
+        while n<len(allplants):
+            count=x['storage-plants'][allplants[n]]
+            if count>0:
+                kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+ids+' '+L+' l '+P+' p'))
+            n+=1
         sendm(id,text,reply_markup=kb)
         
     if 'set' in call.data:
-        plant=
+        plant=call.data.split(' ')[1]
+        L=call.data.split(' ')[2]
+        P=call.data.split(' ')[4]
+        if x['storage-plants'][plant]>0:
+            cplant=x['garden-plants'][L+'line'][P+'pos']
+            if cplant!=None:
+                users.update_one({'id':id},{'$inc':{'storage-plants.'cplant:1}})
+            users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
+            users.update_one({'id':id},{'$inc':{'storage-plants.'plant:-1}})
+            sendm(id,'Вы успешно посадили растение на позицию!')
         
         
         
@@ -102,6 +122,13 @@ def createuser(id,name,username):
     baseplants=['pea','sunflower','wallnut','mine']
     pos={'1pos':None,'2pos':None,'3pos':None,'4pos':None,'5pos':None}
     gplants={'1line':pos,'2line':pos,'3line':pos,'4line':pos,'5line':pos}
+    i=len(allplants)
+    n=0
+    splants={}
+    while n<i:
+        splants.update([allplants[n]:0])
+        n+=1
+        print(splants)
     return{
         'id':id,
         'name':name,
@@ -110,7 +137,7 @@ def createuser(id,name,username):
         'zombies':[],
         'shop-plants':baseplants,
         'garden-plants':gplants,
-        'storage-plants':[]
+        'storage-plants':splants
         'glenght':5
         
     }
