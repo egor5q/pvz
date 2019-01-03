@@ -131,7 +131,11 @@ def planttoname(x):
 
 def sendm(id,text,parse_mode=None,reply_markup=None):
     bot.send_message(id,text,parse_mode=parse_mode,reply_markup=reply_markup)
-            
+       
+def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode='Markdown'):
+    return bot.edit_message_text(chat_id=chat_id,message_id=message_id,text=message_text,reply_markup=reply_markup,
+                                 parse_mode=parse_mode)       
+        
 def createuser(id,name,username):
     baseplants=['pea','sunflower','wallnut','mine']
     pos={'1pos':None,'2pos':None,'3pos':None,'4pos':None,'5pos':None}
