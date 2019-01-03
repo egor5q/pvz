@@ -69,7 +69,7 @@ def menu1(id):
     sendm(id,'Выберите линию для просмотра:',reply_markup=kb)
     
     
-def menu2(id,calldata,x):
+def menu2(id,calldata,x,callid):
     kb=types.InlineKeyboardMarkup()
     text=''
     n=calldata.split(' ')[0]
@@ -79,9 +79,9 @@ def menu2(id,calldata,x):
         kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
         i+=1
     kb.add(types.InlineKeyboardButton(text='Назад',callback_data='menu1'))
-    medit(text,id,call.message.message_id,reply_markup=kb)
+    medit(text,id,callid,reply_markup=kb)
     
-def menu3(id,calldata,x):
+def menu3(id,calldata,x,callid):
     kb=types.InlineKeyboardMarkup()
     L=calldata.split(' ')[2]
     P=calldata.split(' ')[0]
@@ -93,10 +93,10 @@ def menu3(id,calldata,x):
             kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+allplants[n]+' '+L+' l '+P+' p'))
         n+=1
     kb.add(types.InlineKeyboardButton(text='Назад',callback_data='menu2'))
-    medit(text,id,call.message.message_id,reply_markup=kb)
+    medit(text,id,callid,reply_markup=kb)
 
 
-def menu4(id,calldata,x):
+def menu4(id,calldata,x,callid):
     kb=types.InlineKeyboardMarkup()
     plant=calldata.split(' ')[1]
     L=calldata.split(' ')[2]
@@ -107,7 +107,7 @@ def menu4(id,calldata,x):
             users.update_one({'id':id},{'$inc':{'storage-plants.'+cplant:1}})
         users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
         users.update_one({'id':id},{'$inc':{'storage-plants.'+plant:-1}})
-        medit(text,id,call.message.message_id,reply_markup=kb)
+        medit(text,id,callid,reply_markup=kb)
         menu3(id,calldata,x)
     
 @bot.message_handler(commands=['garden'])
@@ -128,19 +128,19 @@ def inline(call):
     id=call.from_user.id
     x=users.find_one({'id':id})
     if 'line' in call.data:
-        menu2(id,call.data,x)
+        menu2(id,call.data,x,call.message.message_id)
     
     if 'pos' in call.data:
-        menu3(id,call.data,x)
+        menu3(id,call.data,x,call.message.message_id)
         
     if 'set' in call.data:
-        menu4(id,call.data,x)
+        menu4(id,call.data,x,call.message.message_id)
         
     if call.data=='menu1':
-        menu1(id,call.data,x)
+        menu1(id,call.data,x,call.message.message_id)
         
     if call.data=='menu2':
-        menu2(id,call.data,x)
+        menu2(id,call.data,x,call.message.message_id)
         
 
     
