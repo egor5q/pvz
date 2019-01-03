@@ -88,7 +88,7 @@ def menu1(id,calldata=None,x=None,callid=None):
 def menu2(id,calldata,x,callid):
     kb=types.InlineKeyboardMarkup()
     n=calldata.split(' ')[0]
-    text='Текущая линия: '+n
+    text='Текущая линия: '+n+'\n'
     i=1
     while i<=x['glenght']:
         text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
