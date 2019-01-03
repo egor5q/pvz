@@ -59,10 +59,9 @@ def start(m):
 def sendzombie(m):
     pass
 
-def menu1(id,calldata=None,x=None,callid=None):
+def menu1(id,calldata=None,callid=None):
     text='Общая картина сада:\n'
-    if x==None:
-        x=users.find_one({'id':id})
+    x=users.find_one({'id':id})
     i=1
     while i<=5:
         z=1
@@ -155,7 +154,7 @@ def inline(call):
         menu4(id,call.data,x,call.message.message_id)
         
     if call.data=='menu1':
-        menu1(id,call.data,x,call.message.message_id)
+        menu1(id,call.data,call.message.message_id)
         
     if 'menu2' in call.data:
         menu2(id,call.data,x,call.message.message_id)
@@ -182,7 +181,7 @@ def planttoemoji(x):
 def sendm(id,text,parse_mode=None,reply_markup=None):
     bot.send_message(id,text,parse_mode=parse_mode,reply_markup=reply_markup)
        
-def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode='Markdown'):
+def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode=None):
     return bot.edit_message_text(chat_id=chat_id,message_id=message_id,text=message_text,reply_markup=reply_markup,
                                  parse_mode=parse_mode)       
         
