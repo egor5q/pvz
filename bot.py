@@ -86,7 +86,7 @@ def inline(call):
         text=''
         n=call.data.split(' ')[0]
         i=1
-        while i<x['glenght']:
+        while i<=x['glenght']:
             text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
             kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
             i+=1
