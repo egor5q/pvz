@@ -125,7 +125,7 @@ def menu4(id,calldata,x,callid):
         users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
         users.update_one({'id':id},{'$inc':{'storage-plants.'+plant:-1}})
         medit(text,id,callid,reply_markup=kb)
-        menu3(id,calldata,x)
+        menu3(id,calldata,x,call.id)
     
 @bot.message_handler(commands=['garden'])
 def garden(m):
