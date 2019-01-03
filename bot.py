@@ -82,7 +82,7 @@ def menu1(id,calldata=None,x=None,callid=None):
     if calldata==None:
         sendm(id,text+'Выберите линию для просмотра:',reply_markup=kb)
     else:
-        medit('Выберите линию для просмотра:',id,callid,reply_markup=kb)
+        medit(text+'Выберите линию для просмотра:',id,callid,reply_markup=kb)
     
     
 def menu2(id,calldata,x,callid):
