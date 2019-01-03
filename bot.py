@@ -142,7 +142,7 @@ def createuser(id,name,username):
     n=0
     splants={}
     while n<i:
-        splants.update(allplants[n]:0)
+        splants.update({allplants[n]:0})
         n+=1
         print(splants)
     return{
