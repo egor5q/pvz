@@ -90,7 +90,7 @@ def inline(call):
             text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
             kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
             i+=1
-        sendm(id,text,reply_markup=kb)
+        medit(text,id,call.message.id,reply_markup=kb)
     
     if 'pos' in call.data:
         L=call.data.split(' ')[2]
@@ -102,7 +102,7 @@ def inline(call):
             if count>0:
                 kb.add(types.InlineKeyboardButton(text=planttoname(allplants[n])+': '+str(count),callback_data='set '+allplants[n]+' '+L+' l '+P+' p'))
             n+=1
-        sendm(id,text,reply_markup=kb)
+        medit(text,id,call.message.id,reply_markup=kb)
         
     if 'set' in call.data:
         plant=call.data.split(' ')[1]
@@ -114,7 +114,7 @@ def inline(call):
                 users.update_one({'id':id},{'$inc':{'storage-plants.'+cplant:1}})
             users.update_one({'id':id},{'$set':{'garden-plants.'+L+'line.'+P+'pos':plant}})
             users.update_one({'id':id},{'$inc':{'storage-plants.'+plant:-1}})
-            sendm(id,'Вы успешно посадили растение на позицию!')
+            medit(text,id,call.message.id,reply_markup=kb)
         
     
     
