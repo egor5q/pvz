@@ -69,7 +69,7 @@ def menu1(id,calldata=None,callid=None):
         while z<=x['glenght']:
             text+=planttoemoji(x['garden-plants'][str(i)+'line'][str(z)+'pos'])+'   '
             z+=1
-        text+='\n'
+        text+='\n\n'
         i+=1
         
     kb=types.InlineKeyboardMarkup()
@@ -173,7 +173,7 @@ def planttoname(x):
     
 def planttoemoji(x):
     if x==None:
-        return '....'
+        return '__'
     else:
         return em_plants[x]
  
