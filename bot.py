@@ -60,6 +60,19 @@ def sendzombie(m):
     pass
 
 def menu1(id,calldata=None,x=None,callid=None):
+    text='Общая картина сада:\n'
+    if x==None:
+        x=users.find_one({'id':id})
+    i=1
+    while i<=5:
+        z=1
+        text+=str(i)+' линия:| '
+        while z<=x['glenght']:
+            text+=planttoemoji(x['garden-plants'][str(i)+'line'][str(z)+'pos'])+' '
+            z+=1
+        text+='\n'
+        i+=1
+        
     kb=types.InlineKeyboardMarkup()
     kb.add(types.InlineKeyboardButton(text='1 линия',callback_data='1 line'))
     kb.add(types.InlineKeyboardButton(text='2 линия',callback_data='2 line'))
@@ -67,15 +80,15 @@ def menu1(id,calldata=None,x=None,callid=None):
     kb.add(types.InlineKeyboardButton(text='4 линия',callback_data='4 line'))
     kb.add(types.InlineKeyboardButton(text='5 линия',callback_data='5 line'))
     if calldata==None:
-        sendm(id,'Выберите линию для просмотра:',reply_markup=kb)
+        sendm(id,text+'Выберите линию для просмотра:',reply_markup=kb)
     else:
         medit('Выберите линию для просмотра:',id,callid,reply_markup=kb)
     
     
 def menu2(id,calldata,x,callid):
     kb=types.InlineKeyboardMarkup()
-    text=''
     n=calldata.split(' ')[0]
+    text='Текущая линия: '+n
     i=1
     while i<=x['glenght']:
         text+=str(i)+': '+planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
@@ -88,7 +101,8 @@ def menu3(id,calldata,x,callid):
     kb=types.InlineKeyboardMarkup()
     L=calldata.split(' ')[2]
     P=calldata.split(' ')[0]
-    text='Выберите растение для установки на '+P+' позицию:'
+    text='Текущая линия: '+L+'\n'+\
+    'Выберите растение для установки на '+P+' позицию:'
     n=0
     while n<len(allplants):
         count=x['storage-plants'][allplants[n]]
@@ -105,6 +119,7 @@ def menu4(id,calldata,x,callid):
     L=calldata.split(' ')[2]
     P=calldata.split(' ')[4]
     if x['storage-plants'][plant]>0:
+        text='Вы успешно посадили растение "'+planttoname(plant)+'" на '+P+' позицию '+L+' линии!'
         cplant=x['garden-plants'][L+'line'][P+'pos']
         if cplant!=None:
             users.update_one({'id':id},{'$inc':{'storage-plants.'+cplant:1}})
@@ -156,6 +171,12 @@ def planttoname(x):
         return 'Пусто'
     else:
         return em_plants[x]+planttotext(x)
+    
+def planttoemoji(x):
+    if x==None:
+        return '_'
+    else:
+        return em_plants[x]
  
 
 def sendm(id,text,parse_mode=None,reply_markup=None):
