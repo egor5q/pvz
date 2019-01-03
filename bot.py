@@ -46,7 +46,11 @@ def start(m):
                              'насылая на них своих зомби. Доступные на данный момент режимы игры:\n'+
                              '*PvP (wait...)*\n*PvE(wait...)*\n*Постоянная защита сада (coding...)*\n'+
                              'Удачи!\n\n',parse_mode='markdown')
-            
+ 
+@bot.message_handler(commands=['sendzombie'])
+def sendzombie(m):
+    pass
+
 @bot.message_handler(commands=['garden'])
 def garden(m):
     id=m.from_user.id
@@ -75,7 +79,7 @@ def inline(call):
         n=call.data.split(' ')[0]
         i=1
         while i<x['glenght']:
-            text+=planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
+            text+=str(i)+': 'planttoname(x['garden-plants'][n+'line'][str(i)+'pos'])+'\n'
             kb.add(types.InlineKeyboardButton(text=str(i)+' позиция',callback_data=str(i)+' pos '+n+' l'))
             i+=1
         sendm(id,text,reply_markup=kb)
@@ -104,7 +108,9 @@ def inline(call):
             users.update_one({'id':id},{'$inc':{'storage-plants.'plant:-1}})
             sendm(id,'Вы успешно посадили растение на позицию!')
         
-        
+    
+    
+    
         
 def planttoname(x):
     if x==None:
