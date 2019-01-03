@@ -173,7 +173,7 @@ def planttoname(x):
     
 def planttoemoji(x):
     if x==None:
-        return '___'
+        return '....'
     else:
         return em_plants[x]
  
