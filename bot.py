@@ -153,7 +153,7 @@ def createuser(id,name,username):
         'zombies':[],
         'shop-plants':baseplants,
         'garden-plants':gplants,
-        'storage-plants':splants
+        'storage-plants':splants,
         'glenght':5
         
     }
