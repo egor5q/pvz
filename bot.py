@@ -22,6 +22,7 @@ inbattle=[]
 
 plantstats={                           # Тип "wall" обозначает, что зомби будут атаковать его;
     'pea':{'dmg':1,                    # Тип "attacker" обозначает, что растение атакует.
+           'name':'pea',
            'hp':5,
            'range':100,
            'skills':[],
@@ -30,6 +31,7 @@ plantstats={                           # Тип "wall" обозначает, ч�
           },
     
     'sunflower':{'hp':5,
+                 'name':'sunflower',
                  'skills':['sungen'],
                  'types':['plant','wall'],
                  'storage':100,
@@ -37,12 +39,14 @@ plantstats={                           # Тип "wall" обозначает, ч�
                 },
     
     'wallnut':{'hp':50,
+               'name':'wallnut',
                'skills':[],
                'types':['plant','wall'],
                'cost':20
               },
     
     'mine':{'dmg':50,
+            'name':'mine',
             'skills':['mine']
             'types':['plant'],
             'cost':12
@@ -95,8 +99,8 @@ plantnames={
 
 def randomattack(user):
     if user['garden-lvl']==1:
-        players={}
-        players.update(createplayer(user))
+        players=[]
+        players.append(createplayer(user))
         zombies=[]
         s=0
         c=0
@@ -106,7 +110,7 @@ def randomattack(user):
         while c<random.randint(0,2):
             zombies.append('cone')
             c+=1
-        g=games.update(creategame(players,'pve',zombies))
+        g=games.update(creategame(players,'pve',zombies,user['glenght']))
         startgame(g)
         
     
@@ -119,8 +123,47 @@ def startgame(game):
         i=len(game['zombies'])
     while n<=i:
         #тут пойдёт расстановка 5ти или меньше зомбей по 5 лайнам, рандомно.
-        pass
+        z=random.choice(game['zombies'])
+        zombies.append(z)
+        game['zombies'].remove(z)
+        n+=1
+    lines=[1,2,3,4,5]
+    for ids in zombies:
+        line=random.choice(lines)
+        lines.remove(line)
+        game['activezombies'].update(createzombie(ids,line,game['glenght']+1))
         
+    for ids in game['players']:
+        sendm(ids['id'],'Ваш сад атакуют зомби! Дальше я буду отправлять вам отчёт о битве...')
+        
+    for ids in game['activezombies']:
+        zombieact(ids, game)
+        
+        
+def zombieact(zombie, game):
+    line=zombie['line']
+    pos=zombie['pos']
+    if zombie['garden']['pos']>game['glenght']:
+        move(zombie,line,pos,game)
+       
+    cplant=game['garden'][str(line)+'line'][str(pos)]
+    elif cplant!=None:
+        if 'wall' in cplant['types']:
+            attack(zombie,line,pos,game)
+        else:
+            move(zombie,line,pos,game)
+        
+def attack(unit,line,pos,game):
+    cenemy=game['garden'][str(line)+'line'][str(pos)]
+    if cenemy!=None:
+        cenemy['hp']-=unit['dmg']
+        if 'zombie' in unit['types']:
+            game['res']+='Зомби атакует растение на '+str(line)+' линии!\n'
+        elif 'plant' in unit['types']:
+            game['res']+='Растение атакует зомбя на '+str(line)+' линии!\n'
+        
+def move(zombie,line,pos,game):
+    pass
     
 
 def zombattack():
@@ -320,16 +363,25 @@ def createplayer(user):
     }
 
 
-def createzombie(name):
-    zombie=zombiestats[name]
+def createzombie(name,line,pos):
+    zombie=zombiestats[name].copy()
+    x={'garden':{'line':line,
+                 'pos':pos
+                }
+      }
+    zombie.update(x)
     return zombie
 
 
-def creategame(playerlist,gtype,zombies):
+def creategame(playerlist,gtype,zombies,lenght):
     return {
         'type':gtype,
         'players':playerlist,
-        'zombies':zombies
+        'zombies':zombies,
+        'activezombies':[],
+        'garden':playerlist[0]['garden']
+        'glenght':lenght,
+        'res':''
     }
 
 if True:
