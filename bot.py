@@ -51,6 +51,7 @@ plantstats={                           # Тип "wall" обозначает, ч�
 
 zombiestats={
     'simple':{'hp':8,
+              'name':'simple',
               'dmg':3,
               'speed':10,
               'skills':[],
@@ -58,6 +59,7 @@ zombiestats={
               'cost':10
              },
     'cone':{'hp':12,
+            'name':'cone',
             'dmg':3,
             'speed':10,
             'skills':[],
@@ -93,8 +95,31 @@ plantnames={
 
 def randomattack(user):
     if user['garden-lvl']==1:
-        players=[user['id']]
-        games.update(creategame(players))
+        players={}
+        players.update(createplayer(user))
+        zombies=[]
+        s=0
+        c=0
+        while s<random.randint(2,4):
+            zombies.append('simple')
+            s+=1
+        while c<random.randint(0,2):
+            zombies.append('cone')
+            c+=1
+        g=games.update(creategame(players,'pve',zombies))
+        startgame(g)
+        
+    
+def startgame(game):
+    zombies=[]
+    n=0
+    if len(game['zombies'])>5:
+        i=5
+    else:
+        i=len(game['zombies'])
+    while n<=i:
+        #тут пойдёт расстановка 5ти или меньше зомбей по 5 лайнам, рандомно.
+        pass
         
     
 
@@ -281,10 +306,30 @@ def createuser(id,name,username):
         
     }
 
-def creategame(playerlist,gtype,attackers):
+def createplayer(user):
+    lines={'1':1,
+           '2':1,
+           '3':1,
+           '4':1,
+           '5':1
+          }
+    return {
+        'garden':user['garden-plants'],
+        'lines':lines,
+        'id':user['id']
+    }
+
+
+def createzombie(name):
+    zombie=zombiestats[name]
+    return zombie
+
+
+def creategame(playerlist,gtype,zombies):
     return {
         'type':gtype,
-        'players':[]
+        'players':playerlist,
+        'zombies':zombies
     }
 
 if True:
