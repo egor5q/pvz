@@ -17,6 +17,58 @@ client=MongoClient(os.environ['database'])
 db=client.pvz
 users=db.users
 
+games={}
+inbattle=[]
+
+plantstats={                           # Тип "wall" обозначает, что зомби будут атаковать его;
+    'pea':{'dmg':1,                    # Тип "attacker" обозначает, что растение атакует.
+           'hp':5,
+           'range':100,
+           'skills':[],
+           'types':['plant','attacker','wall'],
+           'cost':10
+          },
+    
+    'sunflower':{'hp':5,
+                 'skills':['sungen'],
+                 'types':['plant','wall'],
+                 'storage':100,
+                 'cost':100
+                },
+    
+    'wallnut':{'hp':50,
+               'skills':[],
+               'types':['plant','wall'],
+               'cost':20
+              },
+    
+    'mine':{'dmg':50,
+            'skills':['mine']
+            'types':['plant'],
+            'cost':12
+           }
+}
+
+zombiestats={
+    'simple':{'hp':8,
+              'dmg':3,
+              'speed':10,
+              'skills':[],
+              'types':['zombie'],
+              'cost':10
+             },
+    'cone':{'hp':12,
+            'dmg':3,
+            'speed':10,
+            'skills':[],
+            'types':['zombie'],
+            'cost':15
+           }
+}
+            
+
+    
+    
 em_plants={
     'pea':'🔵', 
     'sunflower':'🌻', 
@@ -39,7 +91,19 @@ plantnames={
 }
     
 
+def randomattack(user):
+    if user['garden-lvl']==1:
+        players=[user['id']]
+        games.update(creategame(players))
+        
+    
 
+def zombattack():
+    x=users.find({})
+    for ids in x:
+        if ids['rest']>=60 and random.randint(1,100)<=20:
+            randomattack(ids)
+    
 @bot.message_handler(commands=['start'])
 def start(m):
     id=m.from_user.id
@@ -206,12 +270,21 @@ def createuser(id,name,username):
         'name':name,
         'username':username,
         'sun':0,
+        'brains':0,
+        'money':0,
         'zombies':[],
         'shop-plants':baseplants,
         'garden-plants':gplants,
         'storage-plants':splants,
-        'glenght':5
+        'glenght':5,
+        'garden-lvl':1
         
+    }
+
+def creategame(playerlist,gtype,attackers):
+    return {
+        'type':gtype,
+        'players':[]
     }
 
 if True:
