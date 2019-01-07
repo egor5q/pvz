@@ -145,7 +145,7 @@ def startgame(game):
         game['activezombies'].append(createzombie(ids,line,game['glenght']+1))
     if game['turn']==1:    
         for ids in game['players']:
-            sendm(game['players'][ids]['id'],'Ваш сад атакуют зомби! Дальше я буду отправлять вам отчёт о битве...')
+            sendm(ids['id'],'Ваш сад атакуют зомби! Дальше я буду отправлять вам отчёт о битве...')
             
     if game['turn']==1:
         i=1
