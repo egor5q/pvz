@@ -472,7 +472,7 @@ def creategame(playerlist,gtype,zombies,lenght):
         'players':playerlist,
         'zombies':zombies,
         'activezombies':[],
-        'garden':playerlist[0]['garden']
+        'garden':playerlist[0]['garden'],
         'glenght':lenght,
         'res':'',
         'turn':1
