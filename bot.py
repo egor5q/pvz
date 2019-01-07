@@ -50,7 +50,7 @@ plantstats={                           # Тип "wall" обозначает, ч�
     
     'mine':{'dmg':50,
             'name':'mine',
-            'skills':['mine']
+            'skills':['mine'],
             'types':['plant'],
             'cost':12,
             'effects':[]
