@@ -223,7 +223,7 @@ def plantact(plant,line,pos,game):
         while i<=game['glenght'] and target==None:
             for ids in game['activezombies']:
                 zombie=ids
-                if zombie['line']==line and zombie['pos']==pos and 'die' not in zombie['effects']:
+                if zombie['garden']['line']==line and zombie['garden']['pos']==pos and 'die' not in zombie['effects']:
                     target=zombie
             i+=1
         if target!=None:
