@@ -233,8 +233,8 @@ def plantact(plant,line,pos,game):
             game['res']+='🍃|Растение стоит АФК на '+str(line)+' линии!\n'
         
 def zombieact(zombie, game):
-    line=zombie['line']
-    pos=zombie['pos']
+    line=zombie['garden']['line']
+    pos=zombie['garden']['pos']
     cplant=game['garden'][str(line)+'line'][str(pos)+'pos']
     if zombie['garden']['pos']>game['glenght']:
         move(zombie,line,pos,game)
