@@ -159,7 +159,7 @@ def startgame(game):
             i+=1 
     
     for ids in game['activezombies']:
-        zombie=game['activezombies'][ids]
+        zombie=ids
         if 'die' not in zombie['effects']:
             zombieact(zombie, game)
     i=1
