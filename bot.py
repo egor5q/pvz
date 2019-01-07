@@ -207,8 +207,11 @@ def endturn(game):
         
         
 def plantt(plant):
-    plant=plantstats[plant]
-    return plant
+    if plant!=None:
+        plant=plantstats[plant]
+        return plant
+    else:
+        return None
     
     
     
