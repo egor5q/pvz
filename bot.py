@@ -187,7 +187,7 @@ def allplantchoice(act):
 
 def endturn(game):
     for ids in game['activezombies']:
-        zombie=game['activezombies'][ids]
+        zombie=ids
         if zombie['hp']<=0:
             zombie['effects'].append('die')
             
