@@ -263,7 +263,7 @@ def attack(unit,line,pos,game):
         
 def move(zombie,line,pos,game):
     x=int(zombie['speed']/10)
-    pos-=x
+    zombie['garden']['pos']-=x
     game['res']+='🧟‍♂️|Зомби двигается по линии '+str(line)+' на '+str(pos)+' позицию!\n'
     
 
