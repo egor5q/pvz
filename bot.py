@@ -235,11 +235,11 @@ def plantact(plant,line,pos,game):
 def zombieact(zombie, game):
     line=zombie['garden']['line']
     pos=zombie['garden']['pos']
-    cplant=game['garden'][str(line)+'line'][str(pos)+'pos']
     if zombie['garden']['pos']>game['glenght']:
         move(zombie,line,pos,game)
        
     else:
+        cplant=game['garden'][str(line)+'line'][str(pos)+'pos']
         if cplant!=None:
             if 'wall' in cplant['types'] and 'die' not in cplant['effects']:
                 attack(zombie,line,pos,game)
