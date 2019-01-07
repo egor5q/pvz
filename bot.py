@@ -121,7 +121,7 @@ def randomattack(user):
         while c<random.randint(0,2):
             zombies.append('cone')
             c+=1
-        g=games.update(creategame(players,'pve',zombies,user['glenght']))
+        games.update(g=creategame(players,'pve',zombies,user['glenght']))
         startgame(g)
         
     
