@@ -153,7 +153,8 @@ def startgame(game):
             p=1
             while p<=game['glenght']:
                 x=plantt(game['garden'][str(i)+'line'][str(p)+'pos'])
-                game['garden'][str(i)+'line'][str(p)+'pos']=x.copy()
+                if x!=None:
+                    game['garden'][str(i)+'line'][str(p)+'pos']=x.copy()
                 p+=1
             i+=1 
     
