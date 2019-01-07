@@ -152,7 +152,7 @@ def startgame(game):
         while i<=5:
             p=1
             while p<=game['glenght']:
-                x=plant(game['garden'][i+'line'][p+'pos'])
+                x=plantt(game['garden'][i+'line'][p+'pos'])
                 game['garden'][i+'line'][p+'pos']=x.copy()
                 p+=1
             i+=1 
@@ -206,7 +206,7 @@ def endturn(game):
     t.start()
         
         
-def plant(plant):
+def plantt(plant):
     plant=plantstats[plant]
     return plant
     
