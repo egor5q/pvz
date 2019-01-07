@@ -167,8 +167,9 @@ def startgame(game):
         p=1
         while p<=game['glenght']:
             plant=game['garden'][str(i)+'line'][str(p)+'pos']
-            if 'die' not in plant['effects']:
-                plantact(plant,i,p,game)
+            if plant!=None:
+                if 'die' not in plant['effects']:
+                    plantact(plant,i,p,game)
             p+=1
         i+=1
         
