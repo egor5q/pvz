@@ -174,7 +174,7 @@ def startgame(game):
     endturn(game)
   
 
-def allplants(act):
+def allplantchoice(act):
     i=1
     while i<=5:
         p=1
