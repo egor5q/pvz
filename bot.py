@@ -27,7 +27,8 @@ plantstats={                           # Тип "wall" обозначает, ч�
            'range':100,
            'skills':[],
            'types':['plant','attacker','wall'],
-           'cost':10
+           'cost':10,
+           'effects':[]
           },
     
     'sunflower':{'hp':5,
@@ -35,21 +36,24 @@ plantstats={                           # Тип "wall" обозначает, ч�
                  'skills':['sungen'],
                  'types':['plant','wall'],
                  'storage':100,
-                 'cost':100
+                 'cost':100,
+                 'effects':[]
                 },
     
     'wallnut':{'hp':50,
                'name':'wallnut',
                'skills':[],
                'types':['plant','wall'],
-               'cost':20
+               'cost':20,
+               'effects':[]
               },
     
     'mine':{'dmg':50,
             'name':'mine',
             'skills':['mine']
             'types':['plant'],
-            'cost':12
+            'cost':12,
+            'effects':[]
            }
 }
 
@@ -60,7 +64,8 @@ zombiestats={
               'speed':10,
               'skills':[],
               'types':['zombie'],
-              'cost':10
+              'cost':10,
+              'effects':[]
              },
     'cone':{'hp':12,
             'name':'cone',
@@ -68,7 +73,8 @@ zombiestats={
             'speed':10,
             'skills':[],
             'types':['zombie'],
-            'cost':15
+            'cost':15,
+            'effects':[]
            }
 }
             
@@ -96,7 +102,12 @@ plantnames={
     'mine':'Картофельная мина'
 }
     
-
+@bot.message_handler(commands=['testattack'])
+def testattack(m):
+    if m.from_user.id==441399484:
+        user=users.find_one({'id':m.from_user.id})
+        randomattack(user)
+    
 def randomattack(user):
     if user['garden-lvl']==1:
         players=[]
@@ -121,7 +132,7 @@ def startgame(game):
         i=5
     else:
         i=len(game['zombies'])
-    while n<=i:
+    while n<i:
         #тут пойдёт расстановка 5ти или меньше зомбей по 5 лайнам, рандомно.
         z=random.choice(game['zombies'])
         zombies.append(z)
@@ -132,13 +143,90 @@ def startgame(game):
         line=random.choice(lines)
         lines.remove(line)
         game['activezombies'].update(createzombie(ids,line,game['glenght']+1))
-        
-    for ids in game['players']:
-        sendm(ids['id'],'Ваш сад атакуют зомби! Дальше я буду отправлять вам отчёт о битве...')
-        
+    if game['turn']==1:    
+        for ids in game['players']:
+            sendm(game['players'][ids]['id'],'Ваш сад атакуют зомби! Дальше я буду отправлять вам отчёт о битве...')
+            
+    if game['turn']==1:
+        i=1
+        while i<=5:
+            p=1
+            while p<=game['glenght']:
+                x=plant(game['garden'][i+'line'][p+'pos'])
+                game['garden'][i+'line'][p+'pos']=x.copy()
+                p+=1
+            i+=1 
+    
     for ids in game['activezombies']:
-        zombieact(ids, game)
+        zombie=game['activezombies'][ids]
+        if 'die' not in zombie['effects']:
+            zombieact(zombie, game)
+    i=1
+    while i<=5:
+        p=1
+        while p<=game['glenght']:
+            plant=game['garden'][i+'line'][p+'pos']
+            if 'die' not in plant['effects']:
+                plantact(plant,i,p,game)
+            p+=1
+        i+=1
         
+    endturn(game)
+  
+
+def allplants(act):
+    i=1
+    while i<=5:
+        p=1
+        while p<=game['glenght']:
+            act
+            p+=1
+        i+=1
+
+def endturn(game):
+    for ids in game['activezombies']:
+        zombie=game['activezombies'][ids]
+        if zombie['hp']<=0:
+            zombie['effects'].append('die')
+            
+    i=1
+    while i<=5:
+        p=1
+        while p<=game['glenght']:
+            plant=game['garden'][i+'line'][p+'pos']
+            if plant['hp']<=0:
+                plant['effects'].append('die')
+            p+=1
+        i+=1
+    
+    for ids in game['players']:
+        sendm(game['players'][ids]['id'], game['res'])
+    game['turn']+=1
+    t=threading.Timer(5,startgame,args=[game])
+    t.start()
+        
+        
+def plant(plant):
+    plant=plantstats[plant]
+    return plant
+    
+    
+    
+def plantact(plant,line,pos,game):
+    if 'attacker' in plant['types']:
+        i=pos
+        target=None
+        while i<=game['glenght'] and target==None:
+            for ids in game['activezombies']:
+                zombie=game['activezombies'][ids]
+                if zombie['line']==line and zombie['pos']==pos and 'die' not in zombie['effects']:
+                    target=zombie
+            i+=1
+        if target!=None:
+            target['hp']-=plant['dmg']
+            game['res']+='🍃|Растение атакует зомбя на '+str(line)+' линии!\n'
+        else:
+            game['res']+='🍃|Растение стоит АФК на '+str(line)+' линии!\n'
         
 def zombieact(zombie, game):
     line=zombie['line']
@@ -148,7 +236,7 @@ def zombieact(zombie, game):
        
     cplant=game['garden'][str(line)+'line'][str(pos)]
     elif cplant!=None:
-        if 'wall' in cplant['types']:
+        if 'wall' in cplant['types'] and 'die' not in cplant['effects']:
             attack(zombie,line,pos,game)
         else:
             move(zombie,line,pos,game)
@@ -158,12 +246,14 @@ def attack(unit,line,pos,game):
     if cenemy!=None:
         cenemy['hp']-=unit['dmg']
         if 'zombie' in unit['types']:
-            game['res']+='Зомби атакует растение на '+str(line)+' линии!\n'
+            game['res']+='🧟‍♂️|Зомби атакует растение на '+str(line)+' линии!\n'
         elif 'plant' in unit['types']:
-            game['res']+='Растение атакует зомбя на '+str(line)+' линии!\n'
+            game['res']+='🍃|Растение атакует зомбя на '+str(line)+' линии!\n'
         
 def move(zombie,line,pos,game):
-    pass
+    x=int(zombie['speed']/10)
+    pos-=x
+    game['res']+='🧟‍♂️|Зомби двигается по линии '+str(line)+' на '+str(pos)+' позицию!\n'
     
 
 def zombattack():
@@ -381,7 +471,8 @@ def creategame(playerlist,gtype,zombies,lenght):
         'activezombies':[],
         'garden':playerlist[0]['garden']
         'glenght':lenght,
-        'res':''
+        'res':'',
+        'turn':1
     }
 
 if True:
