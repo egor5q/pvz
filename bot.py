@@ -205,6 +205,7 @@ def endturn(game):
     
     for ids in game['players']:
         sendm(ids['id'], game['res'])
+    game['res']=''
     game['turn']+=1
     t=threading.Timer(5,startgame,args=[game])
     t.start()
