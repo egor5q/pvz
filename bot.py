@@ -187,10 +187,16 @@ def allplantchoice(act):
         i+=1
 
 def endturn(game):
+    rlist=[]
     for ids in game['activezombies']:
         zombie=ids
         if zombie['hp']<=0:
             zombie['effects'].append('die')
+        if zombie['garden']['pos']<=0:
+            rlist.append(zombie)
+    for ids in rlist: 
+        game['activezombies'].remove(ids)
+        game['res']+='🧟‍♂️|Зомби дошёл до дома на '+str(ids['garden']['line'])+' линии!\n'
             
     i=1
     while i<=5:
