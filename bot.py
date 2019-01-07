@@ -253,7 +253,7 @@ def zombieact(zombie, game):
             move(zombie,line,pos,game)
         
 def attack(unit,line,pos,game):
-    cenemy=game['garden'][str(line)+'line'][str(pos)]
+    cenemy=game['garden'][str(line)+'line'][str(pos)+'pos']
     if cenemy!=None:
         cenemy['hp']-=unit['dmg']
         if 'zombie' in unit['types']:
@@ -264,7 +264,7 @@ def attack(unit,line,pos,game):
 def move(zombie,line,pos,game):
     x=int(zombie['speed']/10)
     zombie['garden']['pos']-=x
-    game['res']+='🧟‍♂️|Зомби двигается по линии '+str(line)+' на '+str(pos)+' позицию!\n'
+    game['res']+='🧟‍♂️|Зомби двигается по линии '+str(line)+' на '+str(pos-1)+' позицию!\n'
     
 
 def zombattack():
