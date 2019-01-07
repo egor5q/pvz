@@ -105,9 +105,16 @@ plantnames={
     
 @bot.message_handler(commands=['testattack'])
 def testattack(m):
-    if m.from_user.id==441399484:
         user=users.find_one({'id':m.from_user.id})
         randomattack(user)
+        
+@bot.message_handler(commands=['stop'])
+def stop(m):
+    try:
+        del games[m.from_user.id]
+        bot.send_message(m.chat.id, 'Игра остановлена!')
+    except:
+        psss
     
 def randomattack(user):
     if user['garden-lvl']==1:
