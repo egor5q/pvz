@@ -195,7 +195,7 @@ def endturn(game):
     while i<=5:
         p=1
         while p<=game['glenght']:
-            plant=game['garden'][i+'line'][p+'pos']
+            plant=game['garden'][str(i)+'line'][str(p)+'pos']
             if plant['hp']<=0:
                 plant['effects'].append('die')
             p+=1
