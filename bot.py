@@ -49,6 +49,7 @@ plantstats={                           # Тип "wall" обозначает, ч�
               },
     
     'mine':{'dmg':50,
+            'hp':1,
             'name':'mine',
             'skills':['mine'],
             'types':['plant'],
